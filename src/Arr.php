@@ -15,37 +15,35 @@ final class Arr
 
     public static function except($array, $keys): array
     {
-        return Arr::forget($array, $keys);
+        return self::forget($array, $keys);
     }
 
     public static function forget($array, $keys): array
     {
         $keys = (array) $keys;
 
-        if (count($keys) === 0) {
+        if (0 === count($keys)) {
             return $array;
         }
 
         foreach ($keys as $key) {
-            if (Arr::exists($array, $key)) {
+            if (self::exists($array, $key)) {
                 unset($array[$key]);
 
                 continue;
             }
 
-            // Check if the key is using dot-notation
             if (! str_contains($key, '.')) {
                 continue;
             }
 
-            // If we are dealing with dot-notation, recursively handle i
             $parts = explode('.', $key);
             $key = array_shift($parts);
 
-            if (Arr::exists($array, $key) && Arr::accessible($array[$key])) {
-                $array[$key] = Arr::forget($array[$key], implode('.', $parts));
+            if (self::exists($array, $key) && self::accessible($array[$key])) {
+                $array[$key] = self::forget($array[$key], implode('.', $parts));
 
-                if (count($array[$key]) === 0) {
+                if (0 === count($array[$key])) {
                     unset($array[$key]);
                 }
             }
@@ -56,7 +54,7 @@ final class Arr
 
     public static function get($array, $key, $default = null)
     {
-        if (! Arr::accessible($array)) {
+        if (! self::accessible($array)) {
             return $default;
         }
 
@@ -64,16 +62,16 @@ final class Arr
             return $array;
         }
 
-        if (Arr::exists($array, $key)) {
+        if (self::exists($array, $key)) {
             return $array[$key];
         }
 
-        if (!str_contains($key, '.')) {
+        if (! str_contains($key, '.')) {
             return $array[$key] ?? $default;
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (Arr::accessible($array) && Arr::exists($array, $segment)) {
+            if (self::accessible($array) && self::exists($array, $segment)) {
                 $array = $array[$segment];
             } else {
                 return $default;

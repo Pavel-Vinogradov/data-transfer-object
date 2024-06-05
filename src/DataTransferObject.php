@@ -10,6 +10,7 @@ use Tizix\DataTransferObject\Attributes\CastWith;
 use Tizix\DataTransferObject\Attributes\MapTo;
 use Tizix\DataTransferObject\Casters\DataTransferObjectCaster;
 use Tizix\DataTransferObject\Exceptions\UnknownProperties;
+use Tizix\DataTransferObject\Exceptions\ValidationException;
 use Tizix\DataTransferObject\Reflection\DataTransferObjectClass;
 
 #[CastWith(DataTransferObjectCaster::class)]
@@ -19,6 +20,11 @@ abstract class DataTransferObject
 
     protected array $onlyKeys = [];
 
+    /**
+     * @param ...$args
+     * @throws ValidationException
+     * @throws UnknownProperties
+     */
     public function __construct(...$args)
     {
         if (is_array($args[0] ?? null)) {
@@ -44,9 +50,9 @@ abstract class DataTransferObject
     {
         return array_map(
             /**
-             * @throws UnknownProperties
+             * @throws UnknownProperties|ValidationException
              */
-            fn (mixed $parameters) => new static($parameters),
+            static fn (mixed $parameters) => new static($parameters),
             $arrayOfParameters
         );
     }
@@ -93,6 +99,7 @@ abstract class DataTransferObject
 
     /**
      * @throws UnknownProperties
+     * @throws ValidationException
      */
     public function clone(...$args): static
     {
@@ -113,7 +120,7 @@ abstract class DataTransferObject
     protected function parseArray(array $array): array
     {
         foreach ($array as $key => $value) {
-            if ($value instanceof DataTransferObject) {
+            if ($value instanceof self) {
                 $array[$key] = $value->toArray();
 
                 continue;

@@ -13,7 +13,8 @@ final class EnumCaster implements Caster
 
     /**
      * EnumCaster constructor.
-     * @param string $enumType - A string name of the enum class to be cast to.
+     *
+     * @param  string  $enumType  - A string name of the enum class to be cast to
      */
     public function __construct(string $enumType)
     {
@@ -26,8 +27,10 @@ final class EnumCaster implements Caster
 
     /**
      * Casts a value into an instance of an enum class.
-     * @param mixed $value - The value to be transformed into an enum instance.
+     *
+     * @param  mixed  $value  - The value to be transformed into an enum instance.
      * @return mixed - The result of the cast operation.
+     *
      * @throws LogicException - If the enum class is not a backed enum or if the value can't be cast.
      */
     public function cast(mixed $value): mixed
@@ -42,11 +45,10 @@ final class EnumCaster implements Caster
 
         $castedValue = $this->enumType::tryFrom($value);
 
-        if ($castedValue === null) {
+        if (null === $castedValue) {
             throw new LogicException("Couldn't cast enum [{$this->enumType}] with value [{$value}]");
         }
 
         return $castedValue;
     }
 }
-

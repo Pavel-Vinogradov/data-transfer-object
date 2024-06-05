@@ -10,7 +10,6 @@ use Attribute;
 final class MapFrom
 {
     public function __construct(
-        public string | int $name,
-    ) {
-    }
+        public int|string $name,
+    ) {}
 }

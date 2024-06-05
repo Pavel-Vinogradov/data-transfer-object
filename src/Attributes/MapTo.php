@@ -11,6 +11,5 @@ final class MapTo
 {
     public function __construct(
         public string $name,
-    ) {
-    }
+    ) {}
 }

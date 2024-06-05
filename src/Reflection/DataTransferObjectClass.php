@@ -31,7 +31,7 @@ final class DataTransferObjectClass
     {
         $publicProperties = array_filter(
             $this->reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC),
-            fn (ReflectionProperty $property) => ! $property->isStatic()
+            static fn (ReflectionProperty $property) => ! $property->isStatic()
         );
 
         return array_map(
@@ -43,6 +43,10 @@ final class DataTransferObjectClass
         );
     }
 
+    /**
+     * @return void
+     * @throws ValidationException
+     */
     public function validate(): void
     {
         $validationErrors = [];
@@ -72,13 +76,13 @@ final class DataTransferObjectClass
             $attribute = null;
 
             $reflectionClass = $this->reflectionClass;
-            while ($attribute === null && $reflectionClass !== false) {
+            while (null === $attribute && false !== $reflectionClass) {
                 $attribute = $reflectionClass->getAttributes(Strict::class)[0] ?? null;
 
                 $reflectionClass = $reflectionClass->getParentClass();
             }
 
-            $this->isStrict = $attribute !== null;
+            $this->isStrict = null !== $attribute;
         }
 
         return $this->isStrict;

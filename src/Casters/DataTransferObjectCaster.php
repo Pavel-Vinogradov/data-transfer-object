@@ -7,12 +7,11 @@ namespace Tizix\DataTransferObject\Casters;
 use Tizix\DataTransferObject\Caster;
 use Tizix\DataTransferObject\DataTransferObject;
 
-final class DataTransferObjectCaster implements Caster
+final readonly class DataTransferObjectCaster implements Caster
 {
     public function __construct(
-        private readonly array $classNames
-    ) {
-    }
+        private array $classNames
+    ) {}
 
     public function cast(mixed $value): DataTransferObject
     {

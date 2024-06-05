@@ -43,7 +43,7 @@ final class DataTransferObjectProperty
 
     public function setValue(mixed $value): void
     {
-        if ($this->caster && $value !== null) {
+        if ($this->caster && null !== $value) {
             $value = $this->caster->cast($value);
         }
 
@@ -61,7 +61,7 @@ final class DataTransferObjectProperty
         );
 
         return array_map(
-            fn (ReflectionAttribute $attribute) => $attribute->newInstance(),
+            static fn (ReflectionAttribute $attribute) => $attribute->newInstance(),
             $attributes
         );
     }
@@ -114,7 +114,7 @@ final class DataTransferObjectProperty
                 $reflectionClass = $reflectionClass->getParentClass();
             } while (! count($attributes) && $reflectionClass);
 
-            if (count($attributes) > 0) {
+            if (0 < count($attributes)) {
                 return $attributes;
             }
         }
@@ -132,7 +132,7 @@ final class DataTransferObjectProperty
             array_push($defaultCastAttributes, ...$class->getAttributes(DefaultCast::class));
 
             $class = $class->getParentClass();
-        } while ($class !== false);
+        } while (false !== $class);
 
         if (! count($defaultCastAttributes)) {
             return null;
@@ -150,7 +150,7 @@ final class DataTransferObjectProperty
         return null;
     }
 
-    private function resolveMappedProperty(): string | int
+    private function resolveMappedProperty(): int|string
     {
         $attributes = $this->reflectionProperty->getAttributes(MapFrom::class);
 

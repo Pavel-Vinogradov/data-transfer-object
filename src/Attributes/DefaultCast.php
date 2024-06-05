@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tizix\DataTransferObject\Attributes;
 
 use Attribute;
-use JetBrains\PhpStorm\Immutable;
-use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionNamedType;
 use ReflectionUnionType;
+use JetBrains\PhpStorm\Immutable;
 use Tizix\DataTransferObject\Caster;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
@@ -19,21 +19,20 @@ final class DefaultCast
         private string $targetClass,
         #[Immutable]
         private string $casterClass,
-    ) {
-    }
+    ) {}
 
     public function accepts(ReflectionProperty $property): bool
     {
         $type = $property->getType();
 
-        /** @var ReflectionNamedType[]|null $types */
+        /** @var null|ReflectionNamedType[] $types */
         $types = match ($type::class) {
             ReflectionNamedType::class => [$type],
             ReflectionUnionType::class => $type->getTypes(),
             default => null,
         };
 
-        if (! $types) {
+        if (!$types) {
             return false;
         }
 
